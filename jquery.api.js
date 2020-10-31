@@ -129,7 +129,7 @@ Shopify.addItem = function(variant_id, quantity, callback) {
 // ---------------------------------------------------------
 // POST to cart/add.js returns the JSON of the line item.
 // ---------------------------------------------------------
-Shopify.addItemFromForm = function(form_id, callback) {
+Shopify.addItemFromForm = function(form_id, callback, errorcallback) {
     var params = {
       type: 'POST',
       url: '/cart/add.js',
@@ -144,7 +144,11 @@ Shopify.addItemFromForm = function(form_id, callback) {
         }
       },
       error: function(XMLHttpRequest, textStatus) {
+        if ((typeof errorcallback) === 'function') {
+          errorcallback(line_item);
+        } else {
         Shopify.onError(XMLHttpRequest, textStatus);
+        }
       }
     };
     jQuery.ajax(params);
